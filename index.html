@@ -6,7 +6,52 @@
         <script defer src="script.js"></script>
     </head>
     <body>
-        <header></header>
-        <main></main>
+        <header>
+            <h1>Library</h1>
+        </header>
+        <main>
+            <button id="addNew"></button>
+            <div class="cardHolder"></div>
+            <form>
+                <div class="field">
+                    <input
+                        type="text"
+                        name="title"
+                        class="input"
+                        placeholder=" "
+                    />
+                    <br />
+                    <label for="title" class="label">Title</label>
+                </div>
+                <div class="field">
+                    <input
+                        type="text"
+                        name="author"
+                        class="input"
+                        placeholder=" "
+                    />
+                    <br />
+                    <label for="author" class="label">Author</label>
+                </div>
+                <div class="field">
+                    <input
+                        type="number"
+                        name="pages"
+                        class="input"
+                        placeholder=" "
+                    />
+                    <br />
+                    <label for="pages" class="label">Pages</label>
+                </div>
+                <div id="radio">
+                    <label for="read">Read?</label><br />
+                    <input type="radio" name="read" id="readNo" />
+                    <label for="yes">Yes</label>
+                    <input type="radio" name="read" id="readYes" />
+                    <label for="no">No</label>
+                </div>
+                <input type="submit" value="Add Book" id="submit" />
+            </form>
+        </main>
     </body>
 </html>
