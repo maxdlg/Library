@@ -5,9 +5,15 @@ addNew.addEventListener("click", hideForm);
 const form = document.querySelector("form");
 const submit = document.getElementById("submit");
 submit.addEventListener("click", hideForm);
+submit.addEventListener("click", submitForm);
+
+function removeBook(evt) {
+    let shit = evt.target.parentNode.getAttribute("indexNumber");
+    myLibrary.splice(shit, 1);
+    clearScreen();
+}
 
 let hid = true;
-
 function hideForm() {
     if (hid === true) {
         form.style.right = "65px";
@@ -22,6 +28,24 @@ function hideForm() {
     }
 }
 
+function submitForm() {
+    let title = document.getElementById("title").value;
+    let author = document.getElementById("author").value;
+    let pages = parseInt(document.getElementById("pages").value);
+    let read = !document.getElementById("readYes").checked;
+
+    if (title === "" || author === "" || isNaN(pages)) {
+        alert("Please enter all fields");
+        return;
+    }
+
+    addBookToLibrary(title, author, pages, read);
+    clearScreen();
+    document.querySelector("#title").value = "";
+    document.querySelector("#author").value = "";
+    document.querySelector("#pages").value = "";
+}
+
 function bookCreator(title, author, pages, read) {
     this.title = title;
     this.author = author;
@@ -29,7 +53,7 @@ function bookCreator(title, author, pages, read) {
     this.read = read;
 }
 
-bookCreator.prototype.info = function () {
+bookCreator.prototype.info = function() {
     return (
         this.title +
         " by " +
@@ -41,28 +65,48 @@ bookCreator.prototype.info = function () {
     );
 };
 
-function addBookToLibrary(bookTitle, author, pages, read) {
-    title = bookTitle;
-    title = Object.create(bookCreator.prototype);
-    title.title = bookTitle;
-    title.author = author;
-    title.pages = pages;
-    title.read = read;
-    myLibrary.push(title);
+function addBookToLibrary(title, author, pages, read) {
+    let book = Object.create(bookCreator.prototype);
+    book.title = title;
+    book.author = author;
+    book.pages = pages;
+    book.read = read;
+    myLibrary.push(book);
+}
+
+addBookToLibrary("1", "nug", 420, false);
+addBookToLibrary("2", "black", 420, false);
+addBookToLibrary("3", "fuckhead", 420, false);
+addBookToLibrary("4", "nug", 420, false);
+addBookToLibrary("5", "black", 420, false);
+addBookToLibrary("6", "fuckhead", 420, false);
+
+function clearScreen() {
+    while (cardHolder.firstChild) {
+        cardHolder.removeChild(cardHolder.lastChild);
+    }
     render();
 }
 
-addBookToLibrary("bruh", "nug", 420, false);
-addBookToLibrary("frick", "nig", 69, true);
-addBookToLibrary("black", "bad", 343, true);
-
 function render() {
-    let card = document.createElement("div");
-    myLibrary.forEach((book) => {
+    let i = 0;
+
+    myLibrary.forEach(book => {
+        const card = document.createElement("div");
         card.classList.add("card");
         cardHolder.appendChild(card);
-        card.textContent = book.title + "\n" + book.author;
+        const text = document.createElement("p");
+        text.classList.add("text");
+        card.appendChild(text);
+        const remove = document.createElement("button");
+        remove.classList.add("remove");
+        card.appendChild(remove);
+        remove.textContent = "Remove Book";
+        text.textContent = book.info();
+        card.setAttribute("indexNumber", i);
+        remove.addEventListener("click", removeBook);
+        i++;
     });
 }
 
-console.table(myLibrary);
+render();
