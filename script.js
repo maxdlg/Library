@@ -1,3 +1,4 @@
+// initalize global variables
 let myLibrary = [];
 const cardHolder = document.querySelector(".cardHolder");
 const addNew = document.getElementById("addNew");
@@ -10,6 +11,12 @@ submit.addEventListener("click", submitForm);
 function removeBook(evt) {
     let shit = evt.target.parentNode.getAttribute("indexNumber");
     myLibrary.splice(shit, 1);
+    clearScreen();
+}
+
+function changeRead(evt) {
+    let shit = evt.target.parentNode.getAttribute("indexNumber");
+    myLibrary[shit].read = !myLibrary[shit].read;
     clearScreen();
 }
 
@@ -44,8 +51,11 @@ function submitForm() {
     document.querySelector("#title").value = "";
     document.querySelector("#author").value = "";
     document.querySelector("#pages").value = "";
+    document.getElementsByName("read")[1].checked = false;
+    document.getElementsByName("read")[0].checked = false;
 }
 
+// book constructor
 function bookCreator(title, author, pages, read) {
     this.title = title;
     this.author = author;
@@ -53,6 +63,7 @@ function bookCreator(title, author, pages, read) {
     this.read = read;
 }
 
+// creates the info thing
 bookCreator.prototype.info = function() {
     return (
         this.title +
@@ -65,8 +76,9 @@ bookCreator.prototype.info = function() {
     );
 };
 
+// makes a new book and adds it to the library
 function addBookToLibrary(title, author, pages, read) {
-    let book = Object.create(bookCreator.prototype);
+    let book = Object.create(new bookCreator());
     book.title = title;
     book.author = author;
     book.pages = pages;
@@ -74,12 +86,16 @@ function addBookToLibrary(title, author, pages, read) {
     myLibrary.push(book);
 }
 
-addBookToLibrary("1", "nug", 420, false);
-addBookToLibrary("2", "black", 420, false);
-addBookToLibrary("3", "fuckhead", 420, false);
-addBookToLibrary("4", "nug", 420, false);
-addBookToLibrary("5", "black", 420, false);
-addBookToLibrary("6", "fuckhead", 420, false);
+addBookToLibrary("War and Peace", "Leo Tolstoy", 1225, false);
+addBookToLibrary("The DaVinci Code", "Dan Brown", 466, true);
+addBookToLibrary("Jurassic Park", "Michael Crichton", 408, true);
+addBookToLibrary(
+    "Harry Potter and the Sorcerer's Stone",
+    "J.K Rowling",
+    309,
+    false
+);
+addBookToLibrary("The Hobbit", "J.R.R Tolkien", 310, false);
 
 function clearScreen() {
     while (cardHolder.firstChild) {
@@ -95,18 +111,26 @@ function render() {
         const card = document.createElement("div");
         card.classList.add("card");
         cardHolder.appendChild(card);
+
         const text = document.createElement("p");
         text.classList.add("text");
         card.appendChild(text);
+
         const remove = document.createElement("button");
         remove.classList.add("remove");
         card.appendChild(remove);
         remove.textContent = "Remove Book";
+
+        const readButton = document.createElement("button");
+        readButton.classList.add("changeRead");
+        card.appendChild(readButton);
+        readButton.textContent = "Change Read State";
+
         text.textContent = book.info();
         card.setAttribute("indexNumber", i);
         remove.addEventListener("click", removeBook);
+        readButton.addEventListener("click", changeRead);
         i++;
     });
 }
-
-render();
+clearScreen();
